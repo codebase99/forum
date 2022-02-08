@@ -1,0 +1,16 @@
+:root{
+    --black:#151515;
+    --dark-purple:#301B3F;
+    --dark-blue:#3C415C;
+    --grey:#B4A5A5;
+}
+
+.App{
+    display:flex;
+    flex-direction:column;
+    width:100vw;
+    height:100vh;
+    align-items:center; 
+    background-color: var(--black);
+    color:var(--grey)
+}
