@@ -2,12 +2,22 @@ var express = require('express');
 var router = express.Router();
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectID;
+
 var url = "mongodb://localhost:27017/";
 
 
 const client = new MongoClient(url)
 
 var app = express()
+
+// const http = require('http');
+// const server = http.createServer(app);
+// const { Server } = require("socket.io");
+// const io = new Server(server);
+
+const io = require("socket.io")(3000)
+
+
 var bodyParser = require('body-parser')
 
 // parse application/x-www-form-urlencoded
@@ -113,14 +123,17 @@ router.get('/', function(req, res, next) {
 router.get('/getMessages',async (req, res, next) =>{
   var messages = await getMessages()
   res.json(messages)
+
 })
 router.post('/postMessage', async(req, res, next)=>{
   var name = req.body.name
   var message = req.body.message
   console.log(name, message)
   var result = await postMessage(name, message)
+  io.broadcast.emit('message posted',{})
   console.log("result=",result)
   res.json(result)
+  
 })
 router.put('/updateMessage', async (req,res,next)=>{
   var id = req.body.id

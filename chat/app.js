@@ -11,8 +11,9 @@ var usersRouter = require('./routes/users');
 var app = express();
 
 
+
 const corsOptions ={
-  origin:'http://localhost:3001', 
+  origin:['http://localhost:3001','http://localhost:3003'], 
   credentials:true,            //access-control-allow-credentials:true
   optionSuccessStatus:200
 }
