@@ -4,8 +4,15 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import Messages from './Messages'
 import InputForum from './InputForm'    
-import socketIOClient from "socket.io-client";
-const ENDPOINT = "http://localhost:3000"
+import { io } from "socket.io-client";
+
+
+const socket = io("http://localhost:3000/",{
+  withCredentials: true,
+  extraHeaders: {
+    "my-custom-header": "abcd"
+  }
+});
 
 
 function App() {
@@ -23,18 +30,24 @@ function App() {
     }
   }
   useEffect(async ()=>{
+    
     var data = await fetchMessages()
     setMessages(data)
 
     //setting up socket.io for when messages are posted
-    const socket = socketIOClient(ENDPOINT);
-    socket.on("message posted", async (d) => {
+    // socket.on("connection");
+    socket.on("db changed", async () => {
       console.log("message posted")
-      var data = await fetchMessages()
-      setMessages(data)
+      var newdata = await fetchMessages()
+      setMessages(newdata)
     }); 
   },[])
-  return (
+  // useEffect(()=>{
+  //   socket.on("x",(a)=>{
+  //     console.log("okk")
+  //   })
+  // })
+  return   (
     <div className='App'>
       <div className="header">
         <h1>Forum</h1>

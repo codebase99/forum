@@ -5,15 +5,25 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors');
 
+
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
 
+const isAuth = (request, response, next) => {
+  console.log("1st")
+  // console.log(app.get("io"))
+  request.io = app.get("io");
+  next();
+
+};
+
 
 
 const corsOptions ={
-  origin:['http://localhost:3001','http://localhost:3003'], 
+  origin:['http://localhost:3001'], 
   credentials:true,            //access-control-allow-credentials:true
   optionSuccessStatus:200
 }
@@ -28,7 +38,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+app.use('/', isAuth, indexRouter);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
