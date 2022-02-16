@@ -7,4 +7,5 @@
 
 .Message{
     width:100%;
+    overflow-wrap:break-word;
 }

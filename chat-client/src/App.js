@@ -49,13 +49,13 @@ function App() {
   // })
   return   (
     <div className='App'>
-      <div className="header">
+      <div className="header-container">
         <h1>Forum</h1>
       </div>
-      <div className="InputForm">
+      <div className="InputForm-container">
         <InputForum/>
       </div>
-      <div className="messages">
+      <div className="messages-container">
         <Messages messages={messages}/>
       </div>
       <div className="footer">

@@ -4,22 +4,9 @@ var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 
 var url = "mongodb://localhost:27017/";
-
-
 const client = new MongoClient(url)
 
 var app = express()
-
-// const http = require('http');
-// const server = http.createServer(app);
-// const io = require("socket.io")(server);
-// app.set("io", io);
-
-
-
-// const io = require("socket.io")(3003)
-
-
 var bodyParser = require('body-parser')
 
 // parse application/x-www-form-urlencoded
@@ -48,7 +35,7 @@ async function getMessages() {
       })
     });
     return list
-    // console.log(list)
+    
   }
   catch (err) {
     console.log(err)
@@ -125,41 +112,26 @@ router.get('/', function (req, res, next) {
 router.get('/getMessages', async (req, res, next) => {
   var messages = await getMessages()
   res.json(messages)
-  // io.on("connection", (socket) => {
-  //   console.log("before db changed")
-    
-
-  //   console.log("before db changed")
-  // })
-
 })
 router.post('/postMessage', async (req, res, next) => {
   var name = req.body.name
   var message = req.body.message
   console.log(name, message)
-  var result = await postMessage(name, message)
-  
-  if (result) {
+  try {
+    var result = await postMessage(name, message)
+    if(result){
+      console.log("message posted to db")
+    }
+    else{
+      console.log("message not posted db")
+    }
+    //send message to front end that the state of the db changed
     var io = req.io;
-   
-    // console.log(io)
-    
-    // io.on("connection", async(socket) => {
-    //   console.log("before db changed")
-      
-    //   socket.emit("db changed")
-
-    //   console.log("before db changed")
-    // })
-
     io.sockets.emit("db changed");
-    // var b = await io.emit('message posted',{})
-    console.log("result=",result)
-    // console.log("b=",b)
     res.json(result)
+  } catch (error) {
+    console.log(error)
   }
-
-
 })
 router.put('/updateMessage', async (req, res, next) => {
   var id = req.body.id
@@ -167,18 +139,17 @@ router.put('/updateMessage', async (req, res, next) => {
   var o_id = new ObjectId(id)
   console.log(o_id, updatedMessage)
   var result = await editMessage(o_id, updatedMessage)
+  
   res.json(result)
 })
 router.delete('/deleteMessage', async (req, res, next) => {
   var id = req.body.id
+  console.log(id)
   var o_id = new ObjectId(id)
   var result = await deleteMessage(o_id)
+  var io = req.io;
+  io.sockets.emit("db changed");
   res.json(result)
 })
-
-// server.listen(3000, ()=>{
-//   console.log('Server started at port: 3000');
-// });
-
 
 module.exports = router;
