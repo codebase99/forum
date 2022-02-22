@@ -107,7 +107,7 @@ async function deleteMessage(o_id) {
 /* GET home page. */
 router.get('/', function (req, res, next) {
 
-  res.render('index', { title: 'Express' });
+  
 });
 router.get('/getMessages', async (req, res, next) => {
   var messages = await getMessages()

@@ -7,12 +7,7 @@ import InputForum from './InputForm'
 import { io } from "socket.io-client";
 
 
-const socket = io("http://localhost:3000/",{
-  withCredentials: true,
-  extraHeaders: {
-    "my-custom-header": "abcd"
-  }
-});
+
 
 
 function App() {
@@ -35,6 +30,12 @@ function App() {
     setMessages(data)
 
     //setting up socket.io for when messages are posted
+    const socket = io("http://localhost:3000/",{
+      withCredentials: true,
+      extraHeaders: {
+        "my-custom-header": "abcd"
+      }
+    });
     // socket.on("connection");
     socket.on("db changed", async () => {
       console.log("message posted")
