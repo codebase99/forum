@@ -139,7 +139,8 @@ router.put('/updateMessage', async (req, res, next) => {
   var o_id = new ObjectId(id)
   console.log(o_id, updatedMessage)
   var result = await editMessage(o_id, updatedMessage)
-  
+  var io = req.io;
+  io.sockets.emit("db changed");
   res.json(result)
 })
 router.delete('/deleteMessage', async (req, res, next) => {
